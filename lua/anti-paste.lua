@@ -3,16 +3,20 @@ local gettime = require'socket'.gettime
 
 weechat.register('anti-paste', 'haste', '1.0', 'GPL3', 'Block single-line pastes.', '', '')
 
+-- Constants as functions :(
+local WEECHAT_RC_OK = weechat.WEECHAT_RC_OK()
+local WEECHAT_RC_OK_EAT = weechat.WEECHAT_RC_OK_EAT()
+
 local inputTime
 function hook_command_run(src)
 	if(src == 'anti-paste') then
 		if(inputTime and inputTime < .005) then
 			inputTime = nil
-			return weechat.WEECHAT_RC_OK_EAT()
+			return WEECHAT_RC_OK_EAT
 		end
 	end
 
-	return weechat.WEECHAT_RC_OK()
+	return WEECHAT_RC_OK
 end
 
 local inputStart
@@ -28,7 +32,7 @@ function signal(src, event, key)
 		inputStart = gettime()
 	end
 
-	return weechat.WEECHAT_RC_OK()
+	return WEECHAT_RC_OK
 end
 
 function reset(src, buffer, event)
@@ -36,7 +40,7 @@ function reset(src, buffer, event)
 		inputStart = nil
 	end
 
-	return weechat.WEECHAT_RC_OK()
+	return WEECHAT_RC_OK
 end
 
 weechat.hook_signal('key_pressed', 'signal', '')
